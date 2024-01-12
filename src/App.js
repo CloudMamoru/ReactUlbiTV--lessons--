@@ -1,11 +1,13 @@
-import ClassCounter from './components/ClassCounter';
+import PostItem from './components/PostItem';
+import './styles/App.css';
 
 function App() {
   return (
     <div className='App'>
-      <div>
-        <ClassCounter />
-      </div>
+      <PostItem />
+      <PostItem />
+      <PostItem />
+      <PostItem />
     </div>
   );
 }
