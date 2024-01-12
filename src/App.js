@@ -3,6 +3,7 @@ import './styles/App.css';
 import PostList from './components/PostList';
 import MyButton from './components/UI/button/MyButton';
 import MyInput from './components/UI/input/MyInput';
+import PostForm from './components/PostForm';
 
 function App() {
   const [posts, setPosts] = useState([
@@ -23,32 +24,22 @@ function App() {
     },
   ]);
 
-  const [title, setTitle] = useState('');
-  const [body, setBody] = useState('');
+  const createPost = (post) => {
+    const newPost = {
+      id: posts.length === 0 ? 1 : posts[posts.length - 1].id + 1,
+      ...post,
+    };
+    setPosts([...posts, newPost]);
+  };
 
-  const bodyInputRef = useRef();
-
-  const addNewPost = (e) => {
-    // Предотвращает обновления страницы при использования кнопки (предотвращает поведение по умолчанию)
-    e.preventDefault();
-    setPosts([...posts, { id: 4, title, body: bodyInputRef.current.value }]);
+  const deletePost = (id) => {
+    setPosts(posts.filter((el) => el.id !== id));
   };
 
   return (
     <div className='App'>
-      <form>
-        {/* Управляемый компонент */}
-        <MyInput
-          type='text'
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder='Название поста'
-        />
-        {/* Неуправляемый/Неконтролируемый компонент */}
-        <MyInput ref={bodyInputRef} type='text' placeholder='Содержание поста' />
-        <MyButton onClick={addNewPost}>Создать пост</MyButton>
-      </form>
-      <PostList posts={posts} title={'Список постов'} />
+      <PostForm createPost={createPost} />
+      <PostList deletePost={deletePost} posts={posts} title={'Список постов'} />
     </div>
   );
 }
