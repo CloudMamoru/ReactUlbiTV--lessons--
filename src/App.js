@@ -6,29 +6,18 @@ import PostForm from './components/PostForm';
 import PostFilter from './components/PostFilter';
 import MyModal from './components/UI/MyModal/MyModal';
 import { usePosts } from './hooks/usePosts';
+import axios from 'axios';
 
 function App() {
-  const [posts, setPosts] = useState([
-    {
-      id: 1,
-      title: 'JavaScript',
-      body: 'Язык программирования',
-    },
-    {
-      id: 2,
-      title: 'Dota2',
-      body: 'Компьютерная игра',
-    },
-    {
-      id: 3,
-      title: 'Moscow',
-      body: 'Это столица России',
-    },
-  ]);
-
+  const [posts, setPosts] = useState([]);
   const [filter, setFilter] = useState({ sort: '', query: '' });
   const [modal, setModal] = useState(false);
   const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query);
+
+  async function fetchPosts() {
+    const response = await axios.get('https://jsonplaceholder.typicode.com/posts');
+    setPosts(response.data);
+  }
 
   const createPost = (post) => {
     const newPost = {
@@ -45,6 +34,7 @@ function App() {
 
   return (
     <div className='App'>
+      <MyButton onClick={fetchPosts}>Добавить всех пользователей</MyButton>
       <MyButton style={{ marginTop: '30px' }} onClick={() => setModal(true)}>
         Добавить пост
       </MyButton>
