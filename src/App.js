@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './styles/App.css';
 import PostList from './components/PostList';
 import MyButton from './components/UI/button/MyButton';
@@ -19,6 +19,10 @@ function App() {
     setPosts(response.data);
   }
 
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+
   const createPost = (post) => {
     const newPost = {
       id: posts.length === 0 ? 1 : posts[posts.length - 1].id + 1,
@@ -34,7 +38,6 @@ function App() {
 
   return (
     <div className='App'>
-      <MyButton onClick={fetchPosts}>Добавить всех пользователей</MyButton>
       <MyButton style={{ marginTop: '30px' }} onClick={() => setModal(true)}>
         Добавить пост
       </MyButton>
