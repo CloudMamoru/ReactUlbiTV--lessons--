@@ -4,6 +4,7 @@ import PostList from './components/PostList';
 import MyButton from './components/UI/button/MyButton';
 import MyInput from './components/UI/input/MyInput';
 import PostForm from './components/PostForm';
+import MySelect from './components/UI/select/MySelect';
 
 function App() {
   const [posts, setPosts] = useState([
@@ -24,6 +25,8 @@ function App() {
     },
   ]);
 
+  const [selectedSort, setSelectedSort] = useState('');
+
   const createPost = (post) => {
     const newPost = {
       id: posts.length === 0 ? 1 : posts[posts.length - 1].id + 1,
@@ -36,10 +39,31 @@ function App() {
     setPosts(posts.filter((el) => el.id !== id));
   };
 
+  const sortPosts = (sort) => {
+    setSelectedSort(sort);
+    setPosts([...posts].sort((a, b) => a[sort].localeCompare(b[sort])));
+  };
+
   return (
     <div className='App'>
       <PostForm createPost={createPost} />
-      <PostList deletePost={deletePost} posts={posts} title={'Список постов'} />
+      <hr style={{ margin: '15px 0' }} />
+      <div>
+        <MySelect
+          defaultValue='Сортировка'
+          options={[
+            { value: 'title', name: 'По названию' },
+            { value: 'body', name: 'По описанию' },
+          ]}
+          value={selectedSort}
+          onChange={sortPosts}
+        />
+      </div>
+      {posts.length !== 0 ? (
+        <PostList deletePost={deletePost} posts={posts} title={'Список постов'} />
+      ) : (
+        <h1 style={{ textAlign: 'center' }}>Посты не найдены!</h1>
+      )}
     </div>
   );
 }
