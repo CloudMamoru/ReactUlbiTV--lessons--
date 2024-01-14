@@ -9,20 +9,17 @@ import { usePosts } from './hooks/usePosts';
 import axios from 'axios';
 import PostService from './components/API/PostService';
 import Loader from './components/UI/Loader/Loader';
+import { useFetching } from './hooks/useFetching';
 
 function App() {
   const [posts, setPosts] = useState([]);
   const [filter, setFilter] = useState({ sort: '', query: '' });
   const [modal, setModal] = useState(false);
   const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query);
-  const [isPostsLoading, setIsPostingLoading] = useState(false);
-
-  async function fetchPosts() {
-    setIsPostingLoading(true);
+  const [fetchPosts, isPostsLoading, postError] = useFetching(async () => {
     const posts = await PostService.getAll();
     setPosts(posts);
-    setIsPostingLoading(false);
-  }
+  });
 
   useEffect(() => {
     fetchPosts();
@@ -51,6 +48,7 @@ function App() {
       </MyModal>
       <hr style={{ margin: '15px 0' }} />
       <PostFilter filter={filter} setFilter={setFilter} />
+      {postError && <h1>Произошла ошибка {postError}</h1>}
       {isPostsLoading ? (
         <div style={{ display: 'flex', justifyContent: 'center', marginTop: '75px' }}>
           <Loader />
