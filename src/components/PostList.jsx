@@ -3,6 +3,9 @@ import PostItem from './PostItem';
 
 // Применени деструкторизации пропсов
 const PostList = ({ deletePost, posts, title }) => {
+  if (!posts.length) {
+    return <h1 style={{ textAlign: 'center' }}>Посты не найдены!</h1>;
+  }
   return (
     <div>
       <h1 style={{ textAlign: 'center' }}>{title}</h1>
